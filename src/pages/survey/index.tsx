@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FormEvent } from "react";
 import RadioQuestion from "./RadioQuestion";
 import outline from "../data/outline";
 import Nav from "./Nav";
@@ -55,8 +55,6 @@ const Index: React.FC<{}> = () => {
   const [btnKey, setBtnKey] = React.useState(0);
   const topic = outline[topicIndex] as Topic;
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore
   const submit = React.useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setBtnKey(Math.random());

@@ -28,9 +28,9 @@
         "no-prototype-builtins": 0,
         "react/prop-types": 0,
         "max-len": ["error", { "code": 120, "comments": 65 }],
-        "@typescript-eslint/explicit-function-return-type": {
+        "@typescript-eslint/explicit-function-return-type": [1, {
             "allowExpressions": true
-        }
+        }]
     },
     "settings":  {
         "react":  {

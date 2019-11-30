@@ -1,31 +1,32 @@
 import * as React from "react";
-export interface SurveyValue {
-  onChangeInput(data: object): void;
-}
-export const SurveyContext = React.createContext<SurveyValue>({
-  onChangeInput: data => {}
-} as SurveyValue);
-export const {
-  Provider: SurveyProvider,
-  Consumer: SurveyConsumer
-} = SurveyContext;
+export type SurveyValue = {};
+export const SurveyStateContext = React.createContext<SurveyValue>({});
+export const SurveyDispatchContext = React.createContext<Function>(() => {});
+
 const initState = {};
 type Action = { type: string; data: object };
+
 const reducer = (prevState: {}, action: Action) => {
   switch (action.type) {
     case "ChangeInput":
       return { ...prevState, ...action.data };
     default:
-      return prevState;
+      throw new Error(`Unhandled action type: ${action.type}`);
   }
 };
+
+export const useSurveyState = () => React.useContext(SurveyStateContext);
+export const useSurveyDispatch = () => React.useContext(SurveyDispatchContext);
+
 const SurveyStore: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = React.useReducer(reducer, initState);
-  const onChangeInput = React.useCallback(data => {
-    dispatch({ type: "ChangeInput", data });
-  }, []);
-  const value = { state, onChangeInput };
-  return <SurveyProvider value={value}>{children}</SurveyProvider>;
+  const value = { state };
+  return (
+    <SurveyStateContext.Provider value={value}>
+      <SurveyDispatchContext.Provider value={dispatch}>
+        {children}
+      </SurveyDispatchContext.Provider>
+    </SurveyStateContext.Provider>
+  );
 };
-
 export default SurveyStore;

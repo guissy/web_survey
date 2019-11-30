@@ -10,7 +10,7 @@ import {
 } from "../../store/templateUtil";
 import Input from "./Input";
 import CheckboxQuestion from "./CheckboxQuestion";
-import { SurveyContext } from "../../store/surveyStore";
+import { useSurveyDispatch } from "../../store/surveyStore";
 
 export interface Template {
   feature: GetFormItemOpt;
@@ -28,8 +28,8 @@ export type QuestionType = RadioQuestionItem | QuestionItem | string;
 export interface Topic {
   id: string;
   title: string;
-  description: string;
-  template: keyof Template;
+  description?: string;
+  template?: keyof Template;
   questions: QuestionType[];
 }
 
@@ -59,7 +59,7 @@ const Index: React.FC<{}> = () => {
   const [topicIndex, setTopicIndex] = React.useState(0);
   const [btnKey, setBtnKey] = React.useState(0);
   const topic = outline[topicIndex] as Topic;
-  const { onChangeInput } = React.useContext(SurveyContext);
+  const dispatch = useSurveyDispatch();
   const [values, setValues] = React.useState(
     {} as { [k: string]: string | Set<string> }
   );
@@ -67,7 +67,7 @@ const Index: React.FC<{}> = () => {
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setBtnKey(Math.random());
-      onChangeInput(values);
+      dispatch({ type: "ChangeInput", data: values });
     },
     [values]
   );

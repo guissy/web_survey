@@ -23,7 +23,7 @@ const Footer: React.FC<Props> = ({
         {topicIndex > 0 ? (
           <Button
             btnKey={btnKey + 1}
-            label={`« ${topicPrev.title}`}
+            label={`« ${topicPrev && topicPrev.title}`}
             onClick={() => setTopicIndex(topicIndex - 1)}
           />
         ) : (
@@ -33,7 +33,7 @@ const Footer: React.FC<Props> = ({
         {topicIndex !== outline.length - 1 && (
           <Button
             btnKey={btnKey - 1}
-            label={`${topicNext.title} »`}
+            label={`${topicNext && topicNext.title} »`}
             onClick={() => setTopicIndex(topicIndex + 1)}
           />
         )}

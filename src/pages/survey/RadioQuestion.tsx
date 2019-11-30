@@ -23,34 +23,32 @@ const RadioQuestion: React.FC<Props> = ({
     ? ""
     : (question as RadioQuestionItem).description;
   return (
-    <div>
-      <div className="form-input input-syntax_destructuring form-component-radiogroup">
-        <div className="form-group">
-          <label htmlFor={name} className="form-label">
-            {getQuestionTitle(question)}
-          </label>
-          <div className="form-item-contents">
-            <div className="form-item-input">
-              {options.map((option, index) => (
-                <RadioOption
-                  key={index}
-                  name={name}
-                  index={index}
-                  defaultValue={option.value}
-                  label={option.label}
-                  checked={value === option.value}
-                  onChange={onChange}
-                />
-              ))}
-            </div>
-            {description && (
-              <small className="form-text">
-                <div>
-                  Example: <code>{description}</code>
-                </div>
-              </small>
-            )}
+    <div className="form-input input-syntax_destructuring form-component-radiogroup">
+      <div className="form-group">
+        <label htmlFor={name} className="form-label">
+          {getQuestionTitle(question)}
+        </label>
+        <div className="form-item-contents">
+          <div className="form-item-input">
+            {options.map((option, index) => (
+              <RadioOption
+                key={index}
+                name={name}
+                index={index}
+                defaultValue={option.value}
+                label={option.label}
+                checked={value === option.value}
+                onChange={onChange}
+              />
+            ))}
           </div>
+          {description && (
+            <small className="form-text">
+              <div>
+                Example: <code>{description}</code>
+              </div>
+            </small>
+          )}
         </div>
       </div>
     </div>

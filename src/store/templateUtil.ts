@@ -4,9 +4,10 @@ import {
   QuestionOpt,
   QuestionType,
   RadioOptionItem,
+  RadioQuestionItem,
   Template,
   Topic
-} from "../survey";
+} from "../pages/survey";
 
 export function getTemplateOpt(
   question: QuestionType,
@@ -48,4 +49,24 @@ export function getTemplateOptions(
     }
     return options;
   }
+}
+
+export function getQuestionTitle(question: RadioQuestionItem | string) {
+  const isQuestionObj = typeof question === "string";
+  const title = isQuestionObj
+    ? question
+    : (question as RadioQuestionItem).title;
+  return title;
+}
+
+export function getQuestionName(
+  question: RadioQuestionItem | string,
+  topicId: string
+): string {
+  const title = getQuestionTitle(question);
+  const inputName = (topicId + " " + title)
+    .split(" ")
+    .join("_")
+    .toLocaleLowerCase();
+  return inputName;
 }

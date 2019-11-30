@@ -2,19 +2,23 @@ import React from "react";
 import { QuestionItem } from "./index";
 
 interface Props {
-  parentId: string;
+  name: string;
   question: QuestionItem;
+  onChange: (name: string, value: Set<string>) => void;
+  value: Set<string>;
 }
 
-const CheckboxQuestion: React.FC<Props> = ({ parentId, question }) => {
-  const inputKey = (parentId + " " + question.title)
-    .split(" ")
-    .join("_")
-    .toLocaleLowerCase();
+const CheckboxQuestion: React.FC<Props> = ({
+  name,
+  question,
+  value,
+  onChange
+}) => {
+  const valueOk = value || new Set<string>();
   return (
     <div className="form-input form-component-checkboxgroup">
       <div className="form-group">
-        <label htmlFor={inputKey} className="form-label">
+        <label htmlFor={name} className="form-label">
           {question.title}
         </label>
         <div className="form-item-contents">
@@ -23,13 +27,18 @@ const CheckboxQuestion: React.FC<Props> = ({ parentId, question }) => {
               {question.options.map((label, i) => (
                 <div key={i} className="form-check">
                   <input
-                    name={inputKey}
+                    name={name}
                     type="checkbox"
-                    id={inputKey + i}
+                    id={name + i}
                     className="form-check-input"
                     defaultValue="false"
+                    checked={valueOk.has(label)}
+                    onChange={() => {
+                      valueOk.add(label);
+                      onChange(name, new Set(valueOk));
+                    }}
                   />
-                  <label htmlFor={inputKey + i} className="form-check-label">
+                  <label htmlFor={name + i} className="form-check-label">
                     {label}
                   </label>
                 </div>

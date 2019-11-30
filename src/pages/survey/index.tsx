@@ -1,11 +1,16 @@
 import React, { FormEvent } from "react";
 import RadioQuestion from "./RadioQuestion";
-import outline from "../data/outline";
+import outline from "../../store/outline";
 import Nav from "./Nav";
 import Footer from "./Footer";
-import { getTemplateInput, getTemplateOptions } from "../data/templateUtil";
+import {
+  getQuestionName,
+  getTemplateInput,
+  getTemplateOptions
+} from "../../store/templateUtil";
 import Input from "./Input";
 import CheckboxQuestion from "./CheckboxQuestion";
+import { SurveyContext } from "../../store/surveyStore";
 
 export interface Template {
   feature: GetFormItemOpt;
@@ -54,14 +59,25 @@ const Index: React.FC<{}> = () => {
   const [topicIndex, setTopicIndex] = React.useState(0);
   const [btnKey, setBtnKey] = React.useState(0);
   const topic = outline[topicIndex] as Topic;
-
-  const submit = React.useCallback((e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setBtnKey(Math.random());
-  }, []);
+  const { onChangeInput } = React.useContext(SurveyContext);
+  const [values, setValues] = React.useState(
+    {} as { [k: string]: string | Set<string> }
+  );
+  const submit = React.useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setBtnKey(Math.random());
+      onChangeInput(values);
+    },
+    [values]
+  );
   React.useEffect(() => {
     document.documentElement.scrollTo({ top: 0 });
   }, [topicIndex]);
+  const onChange = React.useCallback(
+    (name, value) => setValues(values => ({ ...values, [name]: value })),
+    []
+  );
   return (
     <div className="main-contents">
       <div className="survey-section">
@@ -81,16 +97,28 @@ const Index: React.FC<{}> = () => {
                         <RadioQuestion
                           key={topic.id + i}
                           options={getTemplateOptions(question, topic)}
-                          parentId={topic.id}
+                          name={getQuestionName(question, topic.id)}
                           question={question}
+                          value={
+                            values[
+                              getQuestionName(question, topic.id)
+                            ] as string
+                          }
+                          onChange={onChange}
                         />
                       );
                     if (input === "checkboxgroup")
                       return (
                         <CheckboxQuestion
                           key={topic.id + i}
-                          parentId={topic.id}
+                          name={getQuestionName(question, topic.id)}
                           question={question as QuestionItem}
+                          value={
+                            values[getQuestionName(question, topic.id)] as Set<
+                              string
+                            >
+                          }
+                          onChange={onChange}
                         />
                       );
                     if (input === "text")

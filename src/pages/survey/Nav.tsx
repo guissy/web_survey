@@ -1,5 +1,5 @@
 import React from "react";
-import outline from "../data/outline";
+import outline from "../../store/outline";
 
 interface Props {
   topicIndex: number;

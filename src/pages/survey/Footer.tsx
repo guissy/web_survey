@@ -37,6 +37,13 @@ const Footer: React.FC<Props> = ({
             onClick={() => setTopicIndex(topicIndex + 1)}
           />
         )}
+        {topicIndex === outline.length - 1 && (
+          <Button
+            btnKey={btnKey - 1}
+            label={`Finish Survey »`}
+            onClick={() => alert("谢谢")}
+          />
+        )}
       </div>
       <div className="form-submit-help">
         Your data is saved whenever you navigate to the previous or next

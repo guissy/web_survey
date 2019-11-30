@@ -1,4 +1,4 @@
-import { QuestionItem } from "../survey";
+import { QuestionItem } from "../pages/survey";
 
 const template = {
   feature: () => ({

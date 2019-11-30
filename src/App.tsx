@@ -1,12 +1,13 @@
 import React from "react";
 import "./App.css";
-import Issue from "./pages/survey/index";
+import Survey from "./pages/survey/index";
+import SurveyStore from "./store/surveyStore";
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <Issue />
-    </div>
+    <SurveyStore>
+      <Survey />
+    </SurveyStore>
   );
 };
 

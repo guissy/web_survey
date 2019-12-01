@@ -1,38 +1,43 @@
 /// <reference types="Cypress" />
+/** eslint-disable */
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
 const urls = {
   staging: "https://business.staging.conio.com",
   production: "https://business.conio.com"
 };
 
-const shouldNotBeCached = xhr =>
+const shouldNotBeCached = (xhr: Cypress.Response) =>
   cy
     .wrap(xhr)
-    .its("headers.cache-control")
+    .its("headers")
+    .its("cache-control")
     .should("equal", "public,max-age=0,must-revalidate");
-const shouldBeCached = xhr =>
+const shouldBeCached = (xhr: Cypress.Response) =>
   cy
     .wrap(xhr)
-    .its("headers.cache-control")
+    .its("headers")
+    .its("cache-control")
     .should("equal", "public,max-age=31536000,immutable");
 
-const getAppUrl = pageSource => {
+const getAppUrl = (pageSource: string) => {
   const regex = /link as="script" rel="preload" href="\/app-([a-z0-9](.*?))\.js"\/>/g;
   return pageSource
-    .match(regex)[0]
+    .match(regex)![0]
     .split('href="')[1]
     .replace('"/>', "");
 };
 
 context("Site monitoring", () => {
   context("The HTML should not be cached", () => {
-    const test = url => cy.request(url).then(shouldNotBeCached);
+    const test = (url: string) => cy.request(url).then(shouldNotBeCached);
 
     it("staging", () => test(urls.staging));
     it("production", () => test(urls.production));
   });
 
   context("The sitemap.xml should not be cached", () => {
-    const test = url =>
+    const test = (url: string) =>
       cy.request(url + "/sitemap.xml").then(shouldNotBeCached);
 
     it("staging", () => test(urls.staging));
@@ -42,7 +47,7 @@ context("Site monitoring", () => {
   context(
     "The Brotli-compressed assets should be served with the correct content encoding",
     () => {
-      const test = url => {
+      const test = (url: string) => {
         cy.request(url)
           .its("body")
           .then(getAppUrl)
@@ -52,7 +57,8 @@ context("Site monitoring", () => {
                 url: url + appUrl,
                 headers: { "Accept-Encoding": "br" }
               })
-              .its("headers.content-encoding")
+              .its("headers")
+              .its("content-encoding")
               .should("equal", "br")
           );
       };
@@ -63,7 +69,7 @@ context("Site monitoring", () => {
   );
 
   context("The static assets should be cached", () => {
-    const test = url =>
+    const test = (url: string) =>
       cy
         .request(url)
         .its("body")
@@ -80,7 +86,7 @@ context("Site monitoring", () => {
     "An internal page should not contain the same content of the 404 page",
     () => {
       const pageNotFoundContent = "Page not found";
-      const test = url => {
+      const test = (url: string) => {
         cy.request(`${url}/not-found-page`)
           .its("body")
           .should("contain", pageNotFoundContent);
@@ -97,7 +103,7 @@ context("Site monitoring", () => {
   context(
     "The robots.txt file should disallow the crawling of the staging site and allow the production one",
     () => {
-      const test = (url, content) =>
+      const test = (url: string, content: string) =>
         cy
           .request(`${url}/robots.txt`)
           .its("body")

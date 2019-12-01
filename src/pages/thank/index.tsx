@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "@reach/router";
 
 const Thank: React.FC<{ path: string }> = ({}) => {
   return (
@@ -12,7 +13,7 @@ const Thank: React.FC<{ path: string }> = ({}) => {
           "Every bit counts, and it'll help make our data even more representative:"}
       </p>
       <p>
-        <a href="/">Back</a>
+        <Link to="survey">Back</Link>
       </p>
     </div>
   );

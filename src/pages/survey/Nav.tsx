@@ -4,9 +4,17 @@ import outline from "../../store/outline";
 interface Props {
   topicIndex: number;
   setTopicIndex: (i: number) => void;
+  formValues: object;
 }
 
-const Nav: React.FC<Props> = ({ topicIndex, setTopicIndex }) => {
+const Nav: React.FC<Props> = ({ topicIndex, setTopicIndex, formValues }) => {
+  const outlineOk = outline.map(topic => {
+    const keys = Object.keys(formValues).filter(key =>
+      key.startsWith(topic.id)
+    );
+    const finished = (keys.length / topic.questions.length) * 100;
+    return { ...topic, finished };
+  });
   return (
     <nav className="section-nav section-nav-hidden">
       <div className="section-nav-inner">
@@ -16,14 +24,20 @@ const Nav: React.FC<Props> = ({ topicIndex, setTopicIndex }) => {
         </div>
         <div className="section-nav-contents">
           <ul>
-            {outline.map((v, i) => (
-              <li key={v.title} className="section-nav-item">
+            {outlineOk.map((topic, i) => (
+              <li key={topic.title} className="section-nav-item">
                 <a
                   className={i === topicIndex ? "active" : ""}
                   onClick={() => setTopicIndex(i)}
                   href={"#" + i}
                 >
-                  {v.title}
+                  {topic.title}
+                  {topic.finished > 0 && (
+                    <span className="section-nav-item-completion">
+                      {" "}
+                      {topic.finished.toFixed(0)}%
+                    </span>
+                  )}
                 </a>
               </li>
             ))}

@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "./Button";
 import { Topic } from "./index";
+import { navigate } from "@reach/router";
 
 interface Props {
   btnKey: number;
@@ -41,7 +42,7 @@ const Footer: React.FC<Props> = ({
           <Button
             btnKey={btnKey - 1}
             label={`Finish Survey »`}
-            onClick={() => alert("谢谢")}
+            onClick={() => navigate("/thank")}
           />
         )}
       </div>
